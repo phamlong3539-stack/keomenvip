@@ -1,0 +1,23 @@
+# Telegram session files (chứa thông tin đăng nhập – KHÔNG được đưa lên git)
+*.session
+*.session-journal
+telegram_session*
+session_*.session
+
+# Biến môi trường
+.env
+
+# Dữ liệu người dùng (chứa thông tin thành viên đã cào)
+members.csv
+*.csv
+
+# Python cache
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# IDE / OS
+.DS_Store
+.vscode/
+*.log

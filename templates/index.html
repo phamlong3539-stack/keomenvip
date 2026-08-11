@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Telegram Growth Suite v3.0</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+    <div class="bg-aurora"></div>
+
+    <div class="root">
+        <!-- HEADER -->
+        <header class="header">
+            <div class="header-brand">
+                <div class="header-icon">⚡</div>
+                <div>
+                    <h1>Telegram <span class="grad">Growth Suite</span></h1>
+                    <p class="header-sub">Enterprise Member Automation v3.0</p>
+                </div>
+            </div>
+            <div class="header-status">
+                <span class="status-dot" id="dot"></span>
+                <span id="statusLabel">Chưa đăng nhập</span>
+            </div>
+        </header>
+
+        <!-- STATS ROW -->
+        <div class="stats-row">
+            <div class="stat-card" id="statScraped">
+                <div class="stat-val" id="valScraped">0</div>
+                <div class="stat-label">👥 Mem đã cào</div>
+            </div>
+            <div class="stat-card" id="statInvited">
+                <div class="stat-val" id="valInvited">0</div>
+                <div class="stat-label">✅ Mem đã ép vào nhóm</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-val" id="valDelay">35s</div>
+                <div class="stat-label">⏱️ Delay an toàn</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-val text-green" id="valAntiBan">ACTIVE</div>
+                <div class="stat-label">🛡️ Anti-Ban Engine</div>
+            </div>
+        </div>
+
+        <!-- MAIN GRID -->
+        <div class="grid">
+            <!-- LEFT: CONTROLS -->
+            <div class="panel">
+                <div class="panel-title">⚙️ Bảng Điều Khiển</div>
+
+                <!-- STEP 1: LOGIN -->
+                <div class="section">
+                    <div class="section-title">Bước 1 — Kết Nối Tài Khoản Telegram</div>
+                    <div class="hint">
+                        Lấy <b>API ID</b> &amp; <b>API Hash</b> tại: <a href="https://my.telegram.org" target="_blank">my.telegram.org</a> → <i>API development tools</i>
+                    </div>
+                    <div class="form-group">
+                        <label>API ID <span class="badge">7-8 chữ số</span></label>
+                        <input type="number" id="apiId" placeholder="VD: 28475912">
+                    </div>
+                    <div class="form-group">
+                        <label>API Hash</label>
+                        <input type="text" id="apiHash" placeholder="VD: a1b2c3d4e5f6...">
+                    </div>
+                    <div class="form-group">
+                        <label>Số điện thoại Telegram</label>
+                        <input type="text" id="phone" placeholder="VD: +84901234567">
+                    </div>
+                    <div class="btn-row" style="display:flex; gap:10px;">
+                        <button class="btn btn-blue" id="btnLogin" onclick="doLogin()" style="flex:1;">📱 Đăng Nhập Telegram</button>
+                        <button class="btn btn-red" id="btnLogout" onclick="doLogout()" style="width:auto;">🔄 Đăng Xuất / Đổi Nick</button>
+                    </div>
+                </div>
+
+                <!-- STEP 2: TARGET -->
+                <div class="section">
+                    <div class="section-title">Bước 2 — Nhóm Đối Thủ (Nguồn Cào Mem)</div>
+                    <div class="form-group">
+                        <label>Link / Username nhóm ĐỐI THỦ</label>
+                        <input type="text" id="targetGroup" placeholder="VD: https://t.me/nhom_doi_thu">
+                    </div>
+                    <div class="toggle-row">
+                        <label class="toggle-label">
+                            <input type="checkbox" id="onlyActive" checked>
+                            <span>Chỉ lấy nick active gần đây</span>
+                        </label>
+                        <label class="toggle-label">
+                            <input type="checkbox" id="onlyPhoto">
+                            <span>Chỉ lấy nick có ảnh đại diện</span>
+                        </label>
+                    </div>
+                </div>
+
+                <!-- STEP 3: DEST + ACTIONS -->
+                <div class="section">
+                    <div class="section-title">Bước 3 — Nhóm Của Bạn (Đích Ép Mem Vào)</div>
+                    <div class="form-group">
+                        <label>Link / Username nhóm CỦA BẠN</label>
+                        <input type="text" id="destGroup" placeholder="VD: https://t.me/nhom_cua_toi">
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Delay (giây)</label>
+                            <input type="number" id="delaySeconds" value="35" min="10" oninput="document.getElementById('valDelay').textContent=this.value+'s'">
+                        </div>
+                        <div class="form-group">
+                            <label>Giới hạn / phiên</label>
+                            <input type="number" id="maxInvites" value="30" min="1" max="50">
+                        </div>
+                    </div>
+
+                    <!-- 1-CLICK PIPELINE -->
+                    <button class="btn btn-fire" onclick="doPipeline()">
+                        💥 CÀO MEM ĐỐI THỦ &amp; ÉP VÀO NHÓM TÔI (1-CLICK)
+                    </button>
+
+                    <div class="btn-row">
+                        <button class="btn btn-purple" onclick="doScrape()">🔍 Chỉ Cào Mem</button>
+                        <button class="btn btn-green" onclick="doInvite()">➕ Chỉ Ép Mem</button>
+                    </div>
+                    <button class="btn btn-red" onclick="doStop()">🛑 Dừng Ngay</button>
+                </div>
+            </div>
+
+            <!-- RIGHT: TERMINAL + PROGRESS -->
+            <div class="panel">
+                <div class="panel-title">📡 Terminal Realtime</div>
+
+                <div class="progress-wrap">
+                    <div class="progress-meta">
+                        <span id="progressLabel">Chờ khởi chạy...</span>
+                        <span id="progressPct">0%</span>
+                    </div>
+                    <div class="progress-track">
+                        <div class="progress-fill" id="progressFill"></div>
+                    </div>
+                </div>
+
+                <div class="terminal" id="terminal">
+                    <div class="terminal-topbar">
+                        <span class="tdot red"></span><span class="tdot yellow"></span><span class="tdot green"></span>
+                        <span class="terminal-name">growth_suite.log</span>
+                    </div>
+                    <div class="terminal-body" id="logBody">
+                        <div class="log-line dim">[SYSTEM] Khởi tạo WebSocket kết nối server...</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- OTP MODAL -->
+    <div class="modal-bg" id="otpModal">
+        <div class="modal">
+            <div class="modal-icon">🔑</div>
+            <h3>Xác Thực OTP Telegram</h3>
+            <p id="otpMsg">Nhập mã OTP 5 chữ số gửi về Telegram của bạn</p>
+            <input class="otp-input" type="text" id="otpCode" placeholder="_ _ _ _ _" maxlength="5" oninput="this.value=this.value.replace(/\D/g,'')">
+            <div id="twoFaWrap" style="display:none; margin-top:12px;">
+                <input type="password" id="twoFaPassword" placeholder="Mật khẩu 2FA (nếu có)">
+            </div>
+            <button class="btn btn-blue" style="margin-top:16px;" onclick="doOTP()">✅ Xác Nhận OTP</button>
+        </div>
+    </div>
+
+    <script src="/static/app.js"></script>
+</body>
+</html>
